@@ -14,6 +14,8 @@ pip install -U you-get
 
 # 注意事项（Notes）
 
+中文：
+
 1. 请确保您已经安装了Python和pip。
 2. 本程序只是给You-Get程序上一层GUI外壳以便于使用，并不包含You-Get程序本体。 
 3. 若无下载路径，则默认下载到"C:/Users/[用户名]"文件夹中。
@@ -25,6 +27,7 @@ pip install -U you-get
 9. 若下载时中断，可从重新填入相同的视频地址点击开始下载按键即可继续下载。 
 10. 下载地址列表文件中只能一行一个网址。
 
+English:
 
 1. Make sure you have Python, pip and you-get installed.
 2. This program only gives You-Get program a layer of GUI shell for easy use, and does not contain You-Get program ontology.
