@@ -646,7 +646,7 @@ class YouGetGui:
         tk.Label(about_page, text='注意事项', font=(None, 18, 'bold')).pack()
         tk.Label(about_page, justify=tk.LEFT,
                  text='1、本程序只是给You-Get程序上一层GUI外壳以便于使用，并不包含You-Get程序本体。'
-                      '\n2、若无下载路径，则默认下载到"C:/Users/[用户名]"文件夹中。'
+                      '\n2、若无下载路径，则默认下载到软件本体所在的文件夹中。'
                       '\n3、新文件名只要填写名称，无需填写后缀（填写了也没用）。'
                       '\n4、若无新文件名，则程序自动保存为视频原始名称。'
                       '\n5、代理地址必须要同时填写主机地址与端口号。（如：127.0.0.1:00000）'
