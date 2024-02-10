@@ -16,8 +16,10 @@ class YouGetGui:
         # 下载地址
         self.url_label = tk.Label(self.download_frame, text='下载地址：')
         self.url_label.grid(row=0, column=0)
-        self.url_entry = tk.Entry(self.download_frame, width=50)
+        self.url_entry = tk.Entry(self.download_frame, width=48)
         self.url_entry.grid(row=0, column=1, columnspan=6)
+        self.url_entry_hint = tk.Label(self.download_frame, text='')
+        self.url_entry_hint.grid(row=0, column=1, columnspan=6,sticky='w')
         # 清除下载地址
         self.clean = tk.Button(self.download_frame, text='清空', width=8,
                                command=self.clean_url_entry)
@@ -116,7 +118,7 @@ class YouGetGui:
         # 开启调试模式
         self.debug_var = tkinter.BooleanVar()
         self.debug_var.set(False)
-        self.debug_checkbutton = tk.Checkbutton(self.settings_frame, text='开启调试模式', variable=self.debug_var)
+        self.debug_checkbutton = tk.Checkbutton(self.settings_frame, text='开启调试模式（--debug）', variable=self.debug_var)
         self.debug_checkbutton.grid(row=7, column=0, columnspan=1, sticky=tk.W)
         # 下载标签
         self.download_itag_frame = tk.Frame(self.settings_frame)
@@ -266,9 +268,10 @@ class YouGetGui:
                                                    '\n若出现报错，请检查你的网络以及填入的参数是否正确并且符合you-get的要求。'
                                                    '\n有的时候软件看上去是卡住了，但其实是在等待you-get程序的反馈，耐心等待即可。'
                                                    '\n若下载时中断，可从重新填入相同的视频地址点击开始下载按键即可继续下载。'
-                                                   '\n下载地址列表文件中只能一行一个网址。'
-                                                   '\n(c)hunyanjie（魂魇桀） 2024')
+                                                   '\n下载地址列表文件中只能一行一个网址。')
         self.tips_label.grid(row=20, column=8, columnspan=8)
+
+        tk.Label(self.root, text='(c)hunyanjie（魂魇桀） 2024', font=(None, 12, 'bold')).grid(row=21, column=0, columnspan=16)
 
         self.menubar = tk.Menu(self.root)
         self.root.config(menu=self.menubar)
@@ -282,38 +285,40 @@ class YouGetGui:
         self.exit_menu = tk.Menu(self.menubar, tearoff=0)
         self.menubar.add_command(label="退出程序", command=self.exit_program)
 
-    def lunch_download(self):
-        cmd = 'you-get'
-        if self.path_entry.get() != "":
-            cmd += f' -o "{self.path_entry.get()}"'
-        if self.new_name_entry.get() != "":
-            cmd += f' -O "{self.new_name_entry.get()}"'
-        if self.download_itag_var.get():
-            if self.download_itag_entry.get() != "":
-                cmd += f' --itag {self.download_itag_entry.get()}'
-            else:
-                print('Please enter the itag number!!!')
-                self.status_label.config(text='未填入itag！', fg='red')
-                return
-        if self.no_download_captions_var.get():
-            cmd += ' --no-merge'
-        if self.merge_video_parts_var.get():
-            cmd += ' --no-caption'
-        if self.download_m3u8_var.get():
-            cmd += ' --m3u8'
-        if self.ignore_ssl_errors_var.get():
-            cmd += ' --insecure'
-        if self.forced_download_var.get():
-            cmd += ' --force'
-        if self.auto_rename_var.get():
-            cmd += ' --auto-rename'
-        if self.download_all_var.get():
-            cmd += ' --playlist'
+    def lunch_download(self, download=True, cmd=''):
+        if download:
+            cmd = 'you-get'
+            if self.path_entry.get() != "":
+                cmd += f' -o "{self.path_entry.get()}"'
+            if self.new_name_entry.get() != "":
+                cmd += f' -O "{self.new_name_entry.get()}"'
+            if self.download_itag_var.get():
+                if ' --json' not in cmd or ' -i' not in cmd:
+                    if self.download_itag_entry.get() != "":
+                        cmd += f' --itag {self.download_itag_entry.get()}'
+                    else:
+                        print('Please enter the itag number!!!')
+                        self.status_label.config(text='未填入itag！', fg='red')
+                        return
+            if self.no_download_captions_var.get():
+                cmd += ' --no-merge'
+            if self.merge_video_parts_var.get():
+                cmd += ' --no-caption'
+            if self.download_m3u8_var.get():
+                cmd += ' --m3u8'
+            if self.ignore_ssl_errors_var.get():
+                cmd += ' --insecure'
+            if self.forced_download_var.get():
+                cmd += ' --force'
+            if self.auto_rename_var.get():
+                cmd += ' --auto-rename'
+            if self.download_all_var.get():
+                cmd += ' --playlist'
         if self.debug_var.get():
             cmd += ' --debug'
         if self.use_cookies_var.get():
             if self.use_cookies_entry.get() != '':
-                cmd += f' --cookies {self.use_cookies_entry.get()}'
+                cmd += f' --cookies "{self.use_cookies_entry.get()}"'
             else:
                 self.status_label.config(text='未填入cookies路径！', fg='red')
                 return
@@ -369,12 +374,13 @@ class YouGetGui:
                             if line.strip() != '':
                                 self.downloading(f'{cmd} "{line.strip()}"')
                     else:
-                        with open("%temp%/YouGetGuiTmpData.tmp", "w") as file:
+                        open("%TEMP%/YouGetGuiTmpData.tmp", "w").close()
+                        with open("%TEMP%/YouGetGuiTmpData.tmp", "w") as file:
                             for line in text:
                                 if line.strip() != '':
                                     file.write(line + "\n")
-                        self.downloading(f'{cmd} -I "%temp%/YouGetGuiTmpData.tmp"')
-                        os.remove("%temp%/YouGetGuiTmpData.tmp")
+                        self.downloading(f'{cmd} -I "%TEMP%/YouGetGuiTmpData.tmp"')
+                        os.remove("%TEMP%/YouGetGuiTmpData.tmp")
                 else:
                     print('Please enter the download URL or file path!!!')
                     self.status_label.config(text='未填入下载地址或下载网址集合文件地址！', fg='red')
@@ -414,33 +420,23 @@ class YouGetGui:
 
     def select_path(self):
         path = tk.filedialog.askdirectory()
+        print(path)
         if path != '':
-            self.proxy_path_entry.delete(0, tk.END)
-            self.proxy_path_entry.insert(0, path)
+            self.path_entry.delete(0, tk.END)
+            self.path_entry.insert(0, path)
 
     def more_info(self):
-        if self.url_entry.get() == "":
-            print('Please enter the Download Link!!!')
-            self.status_label.config(text='未填入下载地址！', fg='red')
-            return
+        if self.print_info_as_json_var.get():
+            cmd = f'you-get --json'
         else:
-            if self.batch_download_power_var.get():
-                if self.print_info_as_json_var.get():
-                    cmd = f'you-get --json'
-                else:
-                    cmd = f'you-get -i'
-                print(cmd)
-                self.start_download(cmd)
+            cmd = f'you-get -i'
+        print(cmd)
+        self.lunch_download(False, cmd)
 
     def real_link(self):
-        if self.url_entry.get() == "":
-            print('Please enter the Download Link!!!')
-            self.status_label.config(text='未填入下载地址！', fg='red')
-            return
-        else:
-            cmd = f'you-get -u {self.url_entry.get()}'
-            print(cmd)
-            self.start_download(cmd)
+        cmd = f'you-get -u'
+        print(cmd)
+        self.lunch_download(False, cmd)
 
     def no_proxy_button_check(self):
         if self.no_proxy_var.get():
@@ -583,15 +579,18 @@ class YouGetGui:
             self.batch_download_from_file_checkbutton.config(state='normal')
             self.batch_download_parallel()
             if self.batch_download_from_file_var.get():
+                self.url_entry_hint.config(text='')
                 self.url_label.config(text='文件地址：', fg='black')
                 self.url_entry.config(state='normal')
                 self.batch_download_from_file_select_button.config(state='normal')
             else:
+                self.url_entry_hint.config(text='请在下方【下载地址列表】中添加下载地址')
                 self.url_label.config(text='下载地址：', fg='gray')
                 self.url_entry.config(state='disabled')
                 self.batch_download_links_frame.config(fg='black')
                 self.batch_download_links_text.config(fg='black', state='normal')
         else:
+            self.url_entry_hint.config(text='')
             self.url_label.config(text='下载地址：')
             self.url_entry.config(state='normal')
             self.batch_download_from_file_checkbutton.config(state='disabled')
@@ -603,12 +602,14 @@ class YouGetGui:
 
     def batch_download_from_file_check(self):
         if self.batch_download_from_file_var.get():
+            self.url_entry_hint.config(text='')
             self.url_label.config(text='文件地址：', fg='black')
             self.url_entry.config(state='normal')
             self.batch_download_from_file_select_button.config(state='normal')
             self.batch_download_links_frame.config(fg='gray')
             self.batch_download_links_text.config(fg='gray', state='disabled')
         else:
+            self.url_entry_hint.config(text='请在下方【下载地址列表】中添加下载地址')
             self.url_label.config(text='下载地址：', fg='gray')
             self.url_entry.config(state='disabled')
             self.batch_download_from_file_select_button.config(state='disabled')
@@ -627,8 +628,11 @@ class YouGetGui:
     def batch_download_from_file_select(self):
         path = tk.filedialog.askopenfilename(filetypes=[('网址集合文件', ['*.txt']), ('所有文件', '.*')])
         if path != '':
+            self.url_entry_hint.config(text='')
             self.url_entry.delete(0, tk.END)
             self.url_entry.insert(0, path)
+        else:
+            self.url_entry_hint.config(text='请在下方【下载地址列表】中添加下载地址')
 
     def about(self):
 
