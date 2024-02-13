@@ -19,7 +19,7 @@ class YouGetGui:
         self.url_entry = tk.Entry(self.download_frame, width=48)
         self.url_entry.grid(row=0, column=1, columnspan=6)
         self.url_entry_hint = tk.Label(self.download_frame, text='')
-        self.url_entry_hint.grid(row=0, column=1, columnspan=6,sticky='w')
+        self.url_entry_hint.grid(row=0, column=1, columnspan=6, sticky='w')
         # 清除下载地址
         self.clean = tk.Button(self.download_frame, text='清空', width=8,
                                command=self.clean_url_entry)
@@ -118,7 +118,8 @@ class YouGetGui:
         # 开启调试模式
         self.debug_var = tkinter.BooleanVar()
         self.debug_var.set(False)
-        self.debug_checkbutton = tk.Checkbutton(self.settings_frame, text='开启调试模式（--debug）', variable=self.debug_var)
+        self.debug_checkbutton = tk.Checkbutton(self.settings_frame, text='开启调试模式（--debug）',
+                                                variable=self.debug_var)
         self.debug_checkbutton.grid(row=7, column=0, columnspan=1, sticky=tk.W)
         # 下载标签
         self.download_itag_frame = tk.Frame(self.settings_frame)
@@ -271,7 +272,8 @@ class YouGetGui:
                                                    '\n下载地址列表文件中只能一行一个网址。')
         self.tips_label.grid(row=20, column=8, columnspan=8)
 
-        tk.Label(self.root, text='(c)hunyanjie（魂魇桀） 2024', font=(None, 12, 'bold')).grid(row=21, column=0, columnspan=16)
+        tk.Label(self.root, text='(c)hunyanjie（魂魇桀） 2024', font=(None, 12, 'bold')).grid(row=21, column=0,
+                                                                                            columnspan=16)
 
         self.menubar = tk.Menu(self.root)
         self.root.config(menu=self.menubar)
@@ -675,7 +677,8 @@ class YouGetGui:
 
     def install_you_get(self):
         os.system("start cmd /k pip install --upgrade you-get")
-        tk.messagebox.showinfo("提示", "已调起You-Get安装程序，请稍等...\n若出现报错，请尝试手动安装You-Get或者在网络上搜索解决方案。")
+        tk.messagebox.showinfo("提示",
+                               "已调起You-Get安装程序，请稍等...\n若出现报错，请尝试手动安装You-Get或者在网络上搜索解决方案。")
 
     def exit_program(self):
         if tk.messagebox.askyesno("提示", "是否退出程序？"):
