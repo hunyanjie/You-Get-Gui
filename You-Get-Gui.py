@@ -303,9 +303,9 @@ class YouGetGui:
                         self.status_label.config(text='未填入itag！', fg='red')
                         return
             if self.no_download_captions_var.get():
-                cmd += ' --no-merge'
-            if self.merge_video_parts_var.get():
                 cmd += ' --no-caption'
+            if self.merge_video_parts_var.get():
+                cmd += ' --no-merge'
             if self.download_m3u8_var.get():
                 cmd += ' --m3u8'
             if self.ignore_ssl_errors_var.get():
@@ -541,13 +541,16 @@ class YouGetGui:
             if self.player_entry.get():
                 if self.use_cookies_var.get():
                     if self.use_cookies_entry.get() != '':
-                        cmd = (f'you-get --player {self.player_entry.get()} -u {self.url_entry.get()} --cookies '
-                               f'{self.use_cookies_var.get()}')
+                        cmd = f'you-get --player "{self.player_entry.get()}" --cookies "{self.use_cookies_var.get()}" "{self.url_entry.get()}"'
+                        if self.debug_var.get():
+                            cmd += ' --debug'
                     else:
                         self.status_label.config(text='未填入Cookie文件地址！', fg='red')
                         return
                 else:
-                    cmd = f'you-get --player {self.player_entry.get()} -u {self.url_entry.get()}'
+                    cmd = f'you-get --player "{self.player_entry.get()}" "{self.url_entry.get()}"'
+                    if self.debug_var.get():
+                        cmd += ' --debug'
             else:
                 self.status_label.config(text='未填入播放器可执行程序地址！', fg='red')
                 return
@@ -555,16 +558,7 @@ class YouGetGui:
             self.status_label.config(text='未填入视频地址！', fg='red')
             return
         print(cmd)
-        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        self.status_label.config(text='已发送播放请求！请等待......', fg='blue')
-        out, error = process.communicate()
-        out = out.decode('utf-8')
-        error = error.decode('utf-8')
-        print('输出:\n', out)
-        print('错误：\n', error)
-        output_info = f'输出:\n{out}\n错误：\n{error}'
-        self.output_text.delete(0.0, tk.END)
-        self.output_text.insert(0.0, output_info)
+        self.downloading(cmd)
 
     def select_cookies_file(self):
         path = tk.filedialog.askopenfilename(filetypes=[('Cookies文件', ['*.txt', '*.sqlite']), ('所有文件', '.*')])
