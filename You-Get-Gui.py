@@ -115,12 +115,17 @@ class YouGetGui:
         self.download_all_checkbutton = tk.Checkbutton(self.settings_frame, text='下载整个播放列表',
                                                        variable=self.download_all_var)
         self.download_all_checkbutton.grid(row=6, column=0, columnspan=3, sticky=tk.W)
-        # 开启调试模式
-        self.debug_var = tkinter.BooleanVar()
-        self.debug_var.set(False)
-        self.debug_checkbutton = tk.Checkbutton(self.settings_frame, text='开启调试模式（--debug）',
-                                                variable=self.debug_var)
-        self.debug_checkbutton.grid(row=7, column=0, columnspan=1, sticky=tk.W)
+        # 下载格式
+        self.download_format_frame = tk.Frame(self.settings_frame)
+        self.download_format_var = tkinter.BooleanVar()
+        self.download_format_var.set(False)
+        self.download_format_checkbutton = tk.Checkbutton(self.download_format_frame, text='下载选定格式（format）',
+                                                          variable=self.download_format_var,
+                                                          command=self.download_format)
+        self.download_format_checkbutton.grid(row=0, column=0, columnspan=1, sticky=tk.W)
+        self.download_format_entry = tk.Entry(self.download_format_frame, width=10, state='disabled')
+        self.download_format_entry.grid(row=0, column=1, columnspan=2, sticky=tk.E)
+        self.download_format_frame.grid(row=7, column=0, columnspan=3, sticky=tk.W)
         # 下载标签
         self.download_itag_frame = tk.Frame(self.settings_frame)
         self.download_itag_var = tkinter.BooleanVar()
@@ -131,28 +136,35 @@ class YouGetGui:
         self.download_itag_entry = tk.Entry(self.download_itag_frame, width=10, state='disabled')
         self.download_itag_entry.grid(row=0, column=1, columnspan=2, sticky=tk.E)
         self.download_itag_frame.grid(row=7, column=2, columnspan=3, sticky=tk.W)
+        # 开启调试模式
+        self.debug_var = tkinter.BooleanVar()
+        self.debug_var.set(False)
+        self.debug_checkbutton = tk.Checkbutton(self.settings_frame, text='开启调试模式（--debug）',
+                                                variable=self.debug_var)
+        self.debug_checkbutton.grid(row=8, column=0, columnspan=1, sticky=tk.W)
         # 使用Cookies
         self.use_cookies_var = tkinter.BooleanVar()
         self.use_cookies_var.set(False)
         self.use_cookies_checkbutton = tk.Checkbutton(self.settings_frame, text='使用Cookies',
                                                       variable=self.use_cookies_var, command=self.use_cookies)
-        self.use_cookies_checkbutton.grid(row=8, column=0, columnspan=1, sticky=tk.W)
+        self.use_cookies_checkbutton.grid(row=9, column=0, columnspan=1, sticky=tk.W)
         self.use_cookies_entry = tk.Entry(self.settings_frame, width=35, state='disabled')
-        self.use_cookies_entry.grid(row=8, column=0, columnspan=4)
-        self.use_cookies_button = tk.Button(self.settings_frame, text='选择代理文件', command=self.select_cookies_file,
+        self.use_cookies_entry.grid(row=9, column=0, columnspan=4)
+        self.use_cookies_button = tk.Button(self.settings_frame, text='选择Cookies文件',
+                                            command=self.select_cookies_file,
                                             state='disabled')
-        self.use_cookies_button.grid(row=8, column=3, sticky=tk.E)
+        self.use_cookies_button.grid(row=9, column=3, sticky=tk.E)
         # 播放视频/音乐
         self.play_var = tkinter.BooleanVar()
         self.play_var.set(False)
         self.play_checkbutton = tk.Checkbutton(self.settings_frame, text='播放视频/音乐',
                                                variable=self.play_var, command=self.use_player)
-        self.play_checkbutton.grid(row=9, column=0, columnspan=1, sticky=tk.W)
+        self.play_checkbutton.grid(row=10, column=0, columnspan=1, sticky=tk.W)
         self.player_entry = tk.Entry(self.settings_frame, width=30, state='disabled')
-        self.player_entry.grid(row=9, column=0, columnspan=4)
+        self.player_entry.grid(row=10, column=0, columnspan=4)
         self.play_button = tk.Button(self.settings_frame, text='选择播放器可执行文件', command=self.select_player_file,
                                      state='disabled')
-        self.play_button.grid(row=9, column=3, sticky=tk.E)
+        self.play_button.grid(row=10, column=3, sticky=tk.E)
         # 在新的窗口运行所有命令
         self.new_window_var = tkinter.BooleanVar()
         self.new_window_var.set(True)
@@ -162,7 +174,7 @@ class YouGetGui:
                                                      height=2,
                                                      variable=self.new_window_var,
                                                      command=self.new_window_var_update)
-        self.new_window_checkbutton.grid(row=10, column=0, columnspan=8, sticky=tk.W)
+        self.new_window_checkbutton.grid(row=11, column=0, columnspan=8, sticky=tk.W)
         self.new_window_var_update()
 
         # 代理选项
@@ -245,7 +257,7 @@ class YouGetGui:
         self.batch_download_links_text.config(yscrollcommand=self.batch_download_links_scrollbar_y.set)
         self.batch_download_links_frame.grid(row=2, column=0, rowspan=1, columnspan=8, sticky='nw')
 
-        self.batch_download_frame.grid(row=11, column=0, columnspan=8, sticky=tk.W)
+        self.batch_download_frame.grid(row=12, column=0, columnspan=8, sticky=tk.W)
         self.settings_frame.grid(row=1, column=0, columnspan=8, rowspan=999, sticky=tk.W + tk.N)
 
         # 输出
@@ -297,10 +309,18 @@ class YouGetGui:
             if self.download_itag_var.get():
                 if ' --json' not in cmd or ' -i' not in cmd:
                     if self.download_itag_entry.get() != "":
-                        cmd += f' --itag {self.download_itag_entry.get()}'
+                        cmd += f' --itag={self.download_itag_entry.get()}'
                     else:
                         print('Please enter the itag number!!!')
                         self.status_label.config(text='未填入itag！', fg='red')
+                        return
+            if self.download_format_var.get():
+                if ' --json' not in cmd or ' -i' not in cmd:
+                    if self.download_format_entry.get() != "":
+                        cmd += f' --format={self.download_format_entry.get()}'
+                    else:
+                        print('Please enter the format number!!!')
+                        self.status_label.config(text='未填入format！', fg='red')
                         return
             if self.no_download_captions_var.get():
                 cmd += ' --no-caption'
@@ -437,6 +457,20 @@ class YouGetGui:
 
     def real_link(self):
         cmd = f'you-get -u'
+        if self.download_itag_var.get():
+            if self.download_itag_entry.get() != "":
+                cmd += f' --itag={self.download_itag_entry.get()}'
+            else:
+                print('Please enter the itag number!!!')
+                self.status_label.config(text='未填入itag！', fg='red')
+                return
+        if self.download_format_var.get():
+            if self.download_format_entry.get() != "":
+                cmd += f' --format={self.download_format_entry.get()}'
+            else:
+                print('Please enter the format number!!!')
+                self.status_label.config(text='未填入format！', fg='red')
+                return
         print(cmd)
         self.lunch_download(False, cmd)
 
@@ -511,6 +545,12 @@ class YouGetGui:
             self.download_itag_entry.config(state='normal')
         else:
             self.download_itag_entry.config(state='disabled')
+
+    def download_format(self):
+        if self.download_format_var.get():
+            self.download_format_entry.config(state='normal')
+        else:
+            self.download_format_entry.config(state='disabled')
 
     def use_cookies(self):
         if self.use_cookies_var.get():
