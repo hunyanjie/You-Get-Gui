@@ -46,3 +46,9 @@ English:
 8. Sometimes the software seems to be stuck, but it is actually waiting for feedback from the you-get program. Just wait patiently.
 9. If the download is interrupted, you can re-fill the same video address and click the Start download button to continue downloading.
 10. Download the address list file only one URL line.
+
+# 赞赏（Donate)
+WeChat:
+![WeChat](https://hunyanjie.github.io/file/picture/reward_qrcode.png)
+or
+USDT-Ethereum:0xdc737c8fb58b520e07da9a777d77d700e57f661f
