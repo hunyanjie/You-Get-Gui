@@ -160,9 +160,9 @@ class YouGetGui:
         self.play_checkbutton = tk.Checkbutton(self.settings_frame, text='播放视频/音乐',
                                                variable=self.play_var, command=self.use_player)
         self.play_checkbutton.grid(row=10, column=0, columnspan=1, sticky=tk.W)
-        self.player_entry = tk.Entry(self.settings_frame, width=30, state='disabled')
+        self.player_entry = tk.Entry(self.settings_frame, width=35, state='disabled')
         self.player_entry.grid(row=10, column=0, columnspan=4)
-        self.play_button = tk.Button(self.settings_frame, text='选择播放器可执行文件', command=self.select_player_file,
+        self.play_button = tk.Button(self.settings_frame, text='选择可执行文件', command=self.select_player_file,
                                      state='disabled')
         self.play_button.grid(row=10, column=3, sticky=tk.E)
         # 在新的窗口运行所有命令
@@ -303,11 +303,11 @@ class YouGetGui:
         if download:
             cmd = 'you-get'
             if self.path_entry.get() != "":
-                cmd += f' -o "{self.path_entry.get()}"'
+                cmd += f' --output-dir "{self.path_entry.get()}"'
             if self.new_name_entry.get() != "":
-                cmd += f' -O "{self.new_name_entry.get()}"'
+                cmd += f' --output-filename "{self.new_name_entry.get()}"'
             if self.download_itag_var.get():
-                if ' --json' not in cmd or ' -i' not in cmd:
+                if ' --json' not in cmd or ' --info' not in cmd:
                     if self.download_itag_entry.get() != "":
                         cmd += f' --itag={self.download_itag_entry.get()}'
                     else:
@@ -315,7 +315,7 @@ class YouGetGui:
                         self.status_label.config(text='未填入itag！', fg='red')
                         return
             if self.download_format_var.get():
-                if ' --json' not in cmd or ' -i' not in cmd:
+                if ' --json' not in cmd or ' --info' not in cmd:
                     if self.download_format_entry.get() != "":
                         cmd += f' --format={self.download_format_entry.get()}'
                     else:
@@ -382,7 +382,7 @@ class YouGetGui:
                             self.status_label.config(text='文件不存在！', fg='red')
                             return
                     else:
-                        self.downloading(f'{cmd} -I "{self.url_entry.get()}"')
+                        self.downloading(f'{cmd} --input-file "{self.url_entry.get()}"')
                 else:
                     print('Please enter the download URL collection file address!!!')
                     self.status_label.config(text='未填入下载网址集合文件地址！', fg='red')
@@ -396,13 +396,12 @@ class YouGetGui:
                             if line.strip() != '':
                                 self.downloading(f'{cmd} "{line.strip()}"')
                     else:
-                        open("%TEMP%/YouGetGuiTmpData.tmp", "w").close()
-                        with open("%TEMP%/YouGetGuiTmpData.tmp", "w") as file:
-                            for line in text:
+                        tmp_file_path = os.environ.get('temp')
+                        with open(f"{tmp_file_path}\\YouGetGuiTmpData.txt", "w") as file:
+                            for line in text.split('\n'):
                                 if line.strip() != '':
                                     file.write(line + "\n")
-                        self.downloading(f'{cmd} -I "%TEMP%/YouGetGuiTmpData.tmp"')
-                        os.remove("%TEMP%/YouGetGuiTmpData.tmp")
+                        self.downloading(f'{cmd} --input-file "{tmp_file_path}\\YouGetGuiTmpData.txt"')
                 else:
                     print('Please enter the download URL or file path!!!')
                     self.status_label.config(text='未填入下载地址或下载网址集合文件地址！', fg='red')
@@ -451,12 +450,12 @@ class YouGetGui:
         if self.print_info_as_json_var.get():
             cmd = f'you-get --json'
         else:
-            cmd = f'you-get -i'
+            cmd = f'you-get --info'
         print(cmd)
         self.lunch_download(False, cmd)
 
     def real_link(self):
-        cmd = f'you-get -u'
+        cmd = f'you-get --url'
         if self.download_itag_var.get():
             if self.download_itag_entry.get() != "":
                 cmd += f' --itag={self.download_itag_entry.get()}'
@@ -574,7 +573,7 @@ class YouGetGui:
         path = tk.filedialog.askopenfilename(filetypes=[('播放器EXE文件', ['*.exe']), ('所有文件', '.*')])
         if path != '':
             self.player_entry.delete(0, tk.END)
-            self.player_entry.insert(0, path)
+            self.player_entry.insert(0, "'" + path + "'")
 
     def play(self):
         if self.url_entry.get() != '':
