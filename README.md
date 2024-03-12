@@ -48,7 +48,7 @@ English:
 10. Download the address list file only one URL line.
 
 # 更新日志（Update Log）
-2024-03-10 1.0.0 初始版本（Initial version）
+2024-03-10 1.0.0 初始版本（Initial version）[下载地址/download](https://github.com/hunyanjie/You-Get-Gui/releases/tag/v1.0)
 
 # You-Get GUI使用介绍（You-Get GUI Introduction）
 
