@@ -1,0 +1,21 @@
+name: Pull updates from hunyanjie/You-Get-Gui
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Pull update.txt from hunyanjie/You-Get-Gui
+        run: |
+          git config --global user.name 'hunyanjie'
+          git config --global user.email 'zhj2076220656@outlook.com'
+          git remote add upstream https://github.com/hunyanjie/You-Get-Gui.git
+          git fetch upstream main
+          git checkout upstream/main -- update.txt
+          git commit -m "Pull update.txt from hunyanjie/hunyanjie.github.io/file/project/You-Get-GUI"
+          git push origin master
