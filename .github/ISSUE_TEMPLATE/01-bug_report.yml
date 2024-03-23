@@ -1,0 +1,44 @@
+name: BUG提交 / BUG Report
+description: Report bugs to developers
+labels: ["BUG"]
+body:
+  - type: checkboxes
+    attributes:
+      label: 确认 / Assignments
+      description: 提交issue前请确保完成以下前提，否则该issue可能被忽略 / Make sure you read checkboxs below
+      options:
+        - label: 搜索现有issues，不存在相似或相关的issue / No similar or related issues
+          required: true
+        - label: 最新仍有这个问题 / Latest app does not work
+          required: true
+        - label: 此问题和操作系统自身环境、you-get程序、ffmpeg程序无关 / Make sure your machine is not touched by its own system environments, you-get, ffmpeg
+          required: true
+
+  - type: textarea
+    attributes:
+      label: 问题描述 / Describe Bugs
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 复现步骤 / How to reproduce
+      placeholder: "可以将步骤录制成视频放在网盘上，将网盘分享链接粘贴到这里"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 其他信息 / Additions
+      placeholder: ""
+
+  - type: textarea
+    attributes:
+      label: 日志提交 / Relevant log output
+      description: 若是控制台版本也出现同样的问题，打开debug按键后，重复之前的步骤，将完整的显示内容以及you-get的debug显示内容，全部贴在这里
+      placeholder: "打开debug键后，重复之前的步骤，将所有打印的内容全部粘贴到这里，也包括程序本体右半部分的日志内容"
+
+  - type: input
+    attributes:
+      label: 软件版本 / You-Get GUI version
+      placeholder: ""
+    validations:
+      required: true
