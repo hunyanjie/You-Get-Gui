@@ -75,7 +75,7 @@ ffmpeg官网：[https://www.ffmpeg.org/](https://www.ffmpeg.org/)
 
 **我已经将所有有需要的文件放在了网盘中，想要自己下载的可以忽视** 
 
-#### 开始安装
+### 开始安装
 
 #### 1：安装Python
 
