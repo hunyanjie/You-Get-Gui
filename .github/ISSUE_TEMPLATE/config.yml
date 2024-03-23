@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 常见问题 / Wiki
+    url: https://github.com/hunyanjie/you-get-gui/wiki
+    about: 有问题可以先看这里是否有你问题的解决办法
