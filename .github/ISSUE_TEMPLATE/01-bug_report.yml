@@ -28,7 +28,7 @@ body:
   - type: textarea
     attributes:
       label: 其他信息 / Additions
-      placeholder: ""
+      placeholder: "你要补充的信息"
 
   - type: textarea
     attributes:
@@ -39,6 +39,6 @@ body:
   - type: input
     attributes:
       label: 软件版本 / You-Get GUI version
-      placeholder: ""
+      placeholder: "v1.0"
     validations:
       required: true
