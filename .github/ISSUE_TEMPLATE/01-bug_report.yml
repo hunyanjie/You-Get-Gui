@@ -9,9 +9,9 @@ body:
       options:
         - label: 搜索现有issues，不存在相似或相关的issue / No similar or related issues
           required: true
-        - label: 最新仍有这个问题 / Latest app does not work
+        - label: 最新版仍有这个问题 / Latest app does not work
           required: true
-        - label: 此问题和操作系统自身环境、you-get程序、ffmpeg程序无关 / Make sure your machine is not touched by its own system environments, you-get, ffmpeg
+        - label: 此问题和操作系统自身环境、you-get程序、ffmpeg程序无关 / Make sure your machine is not touched by its own system environments, you-get and ffmpeg.
           required: true
 
   - type: textarea
